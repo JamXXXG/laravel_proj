@@ -28,7 +28,7 @@ class DealWonNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+        return ['mail','database'];
     }
 
     /**
