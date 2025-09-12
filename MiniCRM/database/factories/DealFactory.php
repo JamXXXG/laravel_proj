@@ -22,7 +22,7 @@ class DealFactory extends Factory
             'title' => fake()->words(3, true),
             'amount' => fake()->numberBetween(100, 10000),
             'deal_status_id' => \App\Models\DealStatus::inRandomOrder()->first()->id,
-            'expected_close_at' => fake()->optional()->date(),
+            'expected_close_at' => fake()->dateTimeBetween('tomorrow', '+1 month')->format('Y-m-d'),
             'won_at' => fake()->optional()->dateTime(),
             'position' => fake()->numberBetween(0, 100),
         ];
