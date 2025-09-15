@@ -1,4 +1,4 @@
-<div>
+<div class="p-4">
 
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
     @if ($customers->isNotEmpty())
@@ -7,14 +7,16 @@
             <thead>
                 <tr>
                     <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">pic</th>
-                    <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">ID</th>
                     <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Name</th>
                     <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Email</th>
+                    <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Phone</th>
+                    <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Notes</th>
+                    <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Options</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($customers as $customer)
-                    <tr>
+                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-800">
                     
                         @if (Str::startsWith($customer['avatar_path'], 'avatars/'))
                             <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">
@@ -29,17 +31,19 @@
                                 </div>
                             </td>
                         @endif
-                        <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $customer->id }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $customer->name }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $customer->email }}</td>
+                        <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $customer->phone }}</td>
+                        <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $customer->notes }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100"><flux:dropdown>
-    <flux:button icon:trailing="chevron-down">...</flux:button>
-    <flux:menu>
-        <flux:modal.trigger name="edit" wire:navigate><flux:menu.item icon="plus" wire:click="edit({{$customer->id}})" wire:navigate>Edit Customer Info</flux:menu.item></flux:modal.trigger>
-        <flux:menu.separator />
-        <flux:menu.item variant="danger" icon="trash" wire:click="delete({{$customer->id}})">Delete</flux:menu.item>
-    </flux:menu>
-</flux:dropdown></td>
+                            <flux:button icon:trailing="chevron-down">...</flux:button>
+                                <flux:menu>
+                                    <flux:modal.trigger name="edit" wire:navigate><flux:menu.item icon="plus" wire:click="edit({{$customer->id}})" wire:navigate>Edit Customer Info</flux:menu.item></flux:modal.trigger>
+                                    <flux:menu.separator />
+                                    <flux:menu.item variant="danger" icon="trash" wire:click="delete({{$customer->id}})">Delete</flux:menu.item>
+                                </flux:menu>
+                            </flux:dropdown>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

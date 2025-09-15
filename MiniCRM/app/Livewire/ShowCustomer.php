@@ -95,8 +95,7 @@ class ShowCustomer extends Component
             DB::rollBack();
             dd($e->getMessage());
         }
-        
-        $this->dispatch('edit');
+        return redirect(request()->header('Referer'));
     }
     
     public function delete($id)
@@ -110,8 +109,7 @@ class ShowCustomer extends Component
             DB::rollBack();
             dd($e->getMessage());
         }
-        
-        $this->dispatch('edit');
+        return redirect(request()->header('Referer'));
     }
 
     public function addCustomer(){
@@ -149,7 +147,6 @@ class ShowCustomer extends Component
             DB::rollBack();
             dd($e->getMessage());
         }
-
-        dd($this->newCustomer);
+        return redirect(request()->header('Referer'));
     }
 }

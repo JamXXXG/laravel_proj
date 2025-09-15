@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\SendNotification;
 use App\Notifications\DealWonNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -31,23 +32,13 @@ class Deal extends Model
     protected static function booted(): void
     {
         // If a deal is created already as 'won'
-            static::created(function (Deal $deal) {
-                if ($deal->deal_status_id == "4") {
-                    if (!$deal->won_at) {
-                        $deal->forceFill(['won_at' => now()])->save();
-                    }
-                    $deal->user->notify(new DealWonNotification($deal));
-                }
-            });
+        static::created(function (Deal $deal) {
+            SendNotification::dispatch($deal);
+        });
 
             // If a deal is updated as 'won'
         static::updated(function (Deal $deal) {
-            if ($deal->deal_status_id == "4") {
-                if (!$deal->won_at) {
-                    $deal->forceFill(['won_at' => now()])->save();
-                }
-                $deal->user->notify(new DealWonNotification($deal));
-            }
+            SendNotification::dispatch($deal);
         });
     }
 

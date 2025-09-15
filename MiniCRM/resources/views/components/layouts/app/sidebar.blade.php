@@ -14,8 +14,8 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="home" :href="route('customer')" :current="request()->routeIs('customer')" wire:navigate>{{ __('Customer') }}</flux:navlist.item>
-                    <flux:navlist.item icon="home" :href="route('deal')" :current="request()->routeIs('deal')" wire:navigate>{{ __('Deals') }}</flux:navlist.item>
+                    <flux:navlist.item icon="user" :href="route('customer')" :current="request()->routeIs('customer')" wire:navigate>{{ __('Customer') }}</flux:navlist.item>
+                    <flux:navlist.item icon="briefcase" :href="route('deal')" :current="request()->routeIs('deal')" wire:navigate>{{ __('Deals') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
@@ -27,10 +27,14 @@
                 </flux:menu.radio.group>
             </flux:dropdown>
 
-            <flux:navlist variant="outline">
+            {{-- <flux:navlist variant="outline">
                 <flux:navlist.item icon="bell" href="#" target="_blank">
                 {{ __('Notifications') }}
                 </flux:navlist.item>
+            </flux:navlist> --}}
+
+            <flux:navlist variant="outline">
+                <livewire:show-notifications />
             </flux:navlist>
 
             <!-- Desktop User Menu -->

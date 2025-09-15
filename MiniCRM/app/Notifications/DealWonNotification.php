@@ -50,6 +50,7 @@ class DealWonNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'customer_name' => $this->deal->customer->name,
             'deal_id' => $this->deal->id,
             'title'   => $this->deal->title,
             'amount'  => $this->deal->amount,

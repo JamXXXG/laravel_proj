@@ -1,14 +1,4 @@
 <div>
-
-    @if(Auth::user()->unreadNotifications->count() > 0)
-       @foreach(Auth::user()->unreadNotifications as $notification)
-        <p class="bg-blue-100 text-blue-800 p-4 rounded mb-4" wire:click="markAsRead('{{ $notification->id }}')">
-            New Deal Won: {{ $notification->data['title'] }} for {{ $notification->data['amount'] }}!
-        </p>
-                        
-        @endforeach
-    @endif
-
     @if ($deals->isNotEmpty())
     <div class="mb-4 px-4 py-4">
         <flux:heading size="lg" class="mb-4">Deals List</flux:heading>
@@ -19,16 +9,20 @@
                     <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Status</th>
                     <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Email</th>
                     <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Amount</th>
+                    <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Expected Close</th>
+                    <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Won At</th>
                     <th class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">Options</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($deals as $deal)
-                    <tr>
+                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-800">
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->customer->name }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->status->name }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->customer->email }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->amount }}</td>
+                        <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->expected_close_at }}</td>
+                        <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->won_at }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">
                             <flux:dropdown>
                                 <flux:button icon:trailing="chevron-down">...</flux:button>
@@ -109,7 +103,7 @@
                         
                         <flux:input value="{{$editDeal->expected_close_at}}" label="Expected Close Date" id="eexpected_close_at" type="date" wire:model.defer="editDealAttribs.expected_close_at" 
                         />
-                         @if($editDealAttribs['status'] != 4)
+                        @if($editDealAttribs['status'] != 4 && $editDealAttribs['status'] != 5)
                             <div class="flex">
                                 <flux:spacer />
                                 <flux:modal.close><flux:button type="submit" variant="primary" 

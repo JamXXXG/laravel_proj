@@ -68,8 +68,9 @@ class ShowDeals extends Component
             'customer_name' =>  $editDeal->customer->name,
             'status' =>  $editDeal->deal_status_id,
         ];
-        // dd($this->editDeal);
-        $this->dispatch('edit');
+
+
+
     }
     
     public function saveEdit()
@@ -113,8 +114,7 @@ class ShowDeals extends Component
 
 
 
-
-        $this->dispatch('edit');
+        return redirect(request()->header('Referer'));
     }
     
     public function delete($id)
@@ -128,8 +128,7 @@ class ShowDeals extends Component
             DB::rollBack();
             dd($e->getMessage());
         }
-        
-        $this->dispatch('edit');
+        return redirect(request()->header('Referer'));
     }
 
     public function addDeal(){
@@ -165,14 +164,8 @@ class ShowDeals extends Component
             DB::rollBack();
             dd($e->getMessage());
         }
+        return redirect(request()->header('Referer'));
     }
-
-    public function markAsRead($id)
-    {
-        $notification = auth()->user()->notifications()->find($id);
-        if ($notification) {
-            $notification->markAsRead();
-        }
-    }   
+ 
       
 }
