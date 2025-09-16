@@ -43,8 +43,8 @@ class Customers extends Model
         return $this->hasOne(User::class, 'id', 'users_id');
     }
 
-    // public function deals(): MorphMany
-    // {
-    //     return $this->morphMany(Deal::class, 'dealable')->withTrashed();
-    // }
+    public function trydeals(): MorphOne
+    {
+        return $this->MorphOne(TryPolyDeals::class, 'dealable');
+    }
 }

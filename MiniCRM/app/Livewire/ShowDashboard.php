@@ -5,12 +5,14 @@ namespace App\Livewire;
 use App\Models\Customers;
 use App\Models\Deal;
 use App\Models\DealStatus;
+use App\Models\TryPolyDeals;
 use Livewire\Component;
 
 class ShowDashboard extends Component
 {
     public $deals = null; 
     public $customers = null; 
+    public $poly = null; 
     
     public $wonDeals = null; 
     public $leadsDeals = null; 
@@ -20,9 +22,10 @@ class ShowDashboard extends Component
     
     public function boot(){
         
-        $dea = DealStatus::get();
         $this->deals = Deal::with('status', 'customer')->get();
-        $this->customers = Customers::all()->count();
+        $this->customers = Customers::get()->count();
+        $this->poly = TryPolyDeals::with('dealable', 'status', 'user')->get();
+        dd($this->poly); 
         // $this->deals = Deal::with('status', 'customer');
 
         $this->wonDeals = $this->deals->where('status.name', 'Won')->count();

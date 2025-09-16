@@ -44,7 +44,6 @@ class ShowDeals extends Component
     ];
 
     public $query = '';
-
     
     public function boot(){
         $this->editDeal = Deal::with(['status', 'customer'])->get()->first();

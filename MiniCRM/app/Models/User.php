@@ -68,9 +68,9 @@ class User extends Authenticatable
         return $this->hasMany(Deal::class);
     }
 
-    // public function deals2(): MorphMany
-    // {
-    //     return $this->morphMany(Deal::class, 'dealable')->withTrashed();
-    // }
+    public function trydeals(): MorphMany
+    {
+        return $this->morphMany(TryPolyDeals::class, 'dealable')->withTrashed();
+    }
     
 }

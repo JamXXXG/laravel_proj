@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Dealable;
+
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DealStatusSeeder::class);
         $this->call(CustomersSeeder::class);
         $this->call(DealSeeder::class);
+        $this->call(TryPolyDealsSeeder::class);
     }
 }
