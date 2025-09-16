@@ -1,7 +1,15 @@
-<div>
-    @if ($deals->isNotEmpty())
+<div class="p-4">
+
+    @if ($deals)
     <div class="mb-4 px-4 py-4">
         <flux:heading size="lg" class="mb-4">Deals List</flux:heading>
+        <flux:input 
+            label="Search Deals" 
+            placeholder="Search by Status, Amount, Title..." 
+            wire:model.debounce.300ms="query" 
+            wire:keydown.debounce.400ms="search"
+            class="mb-4"
+        />
         <table class="w-full border-collapse table-auto">
             <thead>
                 <tr>

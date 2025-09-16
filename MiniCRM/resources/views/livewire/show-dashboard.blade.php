@@ -4,11 +4,11 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 py-4">
         <div class="bg-black p-4 rounded shadow">
             <h2 class="text-lg font-semibold mb-2">Total Customers</h2>
-            <p class="text-3xl">{{$customers::get()->count()}}</p>
+            <p class="text-3xl">{{$customers}}</p>
         </div>
         <div class="bg-black p-4 rounded shadow">
             <h2 class="text-lg font-semibold mb-2">Total Deals</h2>
-            <p class="text-3xl">{{$deals::get()->count()}}</p>
+            <p class="text-3xl">{{count($deals)}}</p>
         </div>
         <div class="bg-black p-4 rounded shadow">
             <h2 class="text-lg font-semibold mb-2">Negotiating Deals</h2>

@@ -19,10 +19,11 @@
                     @break
                 @endif
                 @if($loop->last)
-                    <flux:spacer />
+                    <flux:separator />
                 @endif
             @endforeach
-            <a class="text-sm text-black bg-blue-10" wire:click="markAll()" wire:refresh>Click here to mark all as read.</a>
+            {{-- <a class="text-sm text-black bg-blue-10" wire:click="markAll()" wire:refresh>Click here to mark all as read.</a> --}}
+            <flux:icon.bell class="inline-block mr-2"/><a class="text-sm bg-blue-10" wire:click="markAll()" wire:refresh>Click here to mark all as read.</a>
         </flux:modal>
 
     @endif

@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('users_id')->constrained()->onDelete('cascade');
-            $table->foreignId('customers_id')->constrained()->onDelete('cascade');
+            $table->foreignId('users_id')->constrained();
+            $table->foreignId('customers_id')->constrained();
+            $table->foreignId('deal_status_id')->constrained();
+            // $table->morphs('dealable');
             $table->string('title');
             $table->unsignedInteger('amount');
-            $table->unsignedInteger('deal_status_id');
             $table->date('expected_close_at')->nullable();
             $table->timestamp('won_at')->nullable();
             $table->unsignedInteger('position')->default(0);

@@ -2,7 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Models\Customers;
 use App\Models\Deal;
+use App\Models\DealStatus;
+use App\Models\User;
 use Carbon\Carbon;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
@@ -40,23 +43,48 @@ class ShowDeals extends Component
         'status' =>  '',
     ];
 
+    public $query = '';
+
     
     public function boot(){
-        $this->editDeal = \App\Models\Deal::with(['status', 'customer'])->get()->first();
-        $this->customers = \App\Models\Customers::get();
-        $this->stats = \App\Models\DealStatus::get();
-        $this->user = \App\Models\User::get();
+        $this->editDeal = Deal::with(['status', 'customer'])->get()->first();
+        $this->customers = Customers::get();
+        $this->stats = DealStatus::get();
+        $this->user = User::get();
     }
 
     public function render()
     {
-        $deals = \App\Models\Deal::with(['status', 'customer'])->paginate(5);
+        if($this->query == ''){
+            $deals = Deal::paginate(5);
+            // dd(Deal::get()[0]->customer);
+        } else {
+            $deals = Deal::query()
+                ->where('title', 'like', '%'.$this->query.'%')
+                ->orWhereHas('status', function($q){
+                    $q->where('name', 'like', '%'.$this->query.'%');
+                })
+                ->orWhereHas('customer', function($q){
+                    $q->where('name', 'like', '%'.$this->query.'%');
+                })
+                ->orWhere('amount', 'like', '%'.$this->query.'%')
+                ->paginate(5);
+
+            if($deals->isEmpty()){
+                session()->flash('message', 'No deals found for the search term: '.$this->query);
+            }
+        }
         return view('livewire.show-deals', ['deals' => $deals]);
+    }
+
+    public function search()
+    {
+        $this->resetPage();
     }
 
     public function edit($id)
     {
-        $editDeal = \App\Models\Deal::with(['customer'])->findOrFail($id);
+        $editDeal = Deal::with(['customer'])->findOrFail($id);
         $this->editDeal = $editDeal;
         $this->editDealAttribs = [
             'id' => $editDeal->id,
@@ -78,7 +106,7 @@ class ShowDeals extends Component
         // $this->editDeal;
         // dd($this->editDeal);
         
-        $editDeal = \App\Models\Deal::with(['customer'])->findOrFail($this->editDealAttribs['id']);
+        $editDeal = Deal::with(['customer'])->findOrFail($this->editDealAttribs['id']);
 
         if($this->editDealAttribs['status_id'] == 4 && $this->editDealAttribs['won_at'] == null){ // if status is "Won" and won_at is null
             $this->editDealAttribs['won_at'] = Carbon::now();
@@ -121,7 +149,7 @@ class ShowDeals extends Component
     {
         DB::beginTransaction();
         try{
-            $deal = \App\Models\Deal::findOrFail($id);
+            $deal = Deal::findOrFail($id);
             $deal->delete();
             DB::commit();
         } catch (\Exception $e){

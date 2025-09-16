@@ -32,16 +32,35 @@ class ShowCustomer extends Component
         'avatar_path' => '',
     ];
     public $editCustomer = null;
+    public $query = '';
 
     public function boot(){
-        $this->editCustomer = \App\Models\Customers::get()->first();
+        $this->editCustomer = Customers::get()->first();
     }
     public function render()
     {
-        return view('livewire.show-customer')->with([
-            'customers' => \App\Models\Customers::paginate(5),
-        ]);
+         if($this->query == ''){
+            $customers = Customers::paginate(5);
+        } else {
+            $customers = Customers::query()
+                ->where('name', 'like', '%'.$this->query.'%')
+                ->orWhere('email', 'like', '%'.$this->query.'%')
+                ->orWhere('phone', 'like', '%'.$this->query.'%')
+                ->orWhere('notes', 'like', '%'.$this->query.'%')
+                ->paginate(5);
+
+            if($customers->isEmpty()){
+                session()->flash('message', 'No deals found for the search term: '.$this->query);
+            }
+        }
+        return view('livewire.show-customer', ['customers' => $customers]);
     }
+
+    public function search()
+    {
+        $this->resetPage();
+    }
+
     public function edit($id)
     {
        $editCustomer = \App\Models\Customers::findOrFail($id);

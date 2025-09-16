@@ -1,8 +1,15 @@
 <div class="p-4">
 
     {{-- Knowing others is intelligence; knowing yourself is true wisdom. --}}
-    @if ($customers->isNotEmpty())
+    @if ($customers)
         <flux:heading size="lg" class="mb-4">Customers List</flux:heading>
+        <flux:input 
+            label="Search Customers" 
+            placeholder="Search by Name, Email, Phone..." 
+            wire:model.debounce.300ms="query" 
+            wire:keydown.debounce.400ms="search"
+            class="mb-4"
+        />
         <table class="w-full border-collapse table-auto">
             <thead>
                 <tr>
