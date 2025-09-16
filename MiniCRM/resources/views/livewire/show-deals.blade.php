@@ -7,7 +7,7 @@
             label="Search Deals" 
             placeholder="Search by Status, Amount, Title..." 
             wire:model.live.debounce.300ms="query" 
-            {{-- wire:keydown.debounce.400ms="search" --}}
+            wire:keydown.debounce.400ms="search"
             class="mb-4"
         />
         <table class="w-full border-collapse table-auto">
