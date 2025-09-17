@@ -23,9 +23,13 @@ class ShowDashboard extends Component
     public function boot(){
         
         $this->deals = Deal::with('status', 'customer')->get();
-        $this->customers = Customers::get()->count();
-        $this->poly = TryPolyDeals::with('dealable', 'status', 'user')->get();
-        dd($this->poly); 
+        $this->customers = Customers::all()->count();
+        // $this->poly = TryPolyDeals::with('dealable', 'status', 'user')->get();
+
+        //dis for poly try
+        // $this->customers = Customers::with('trydeals')->get();
+        // dd($this->customers[14]->trydeals[0]->won_at); 
+
         // $this->deals = Deal::with('status', 'customer');
 
         $this->wonDeals = $this->deals->where('status.name', 'Won')->count();

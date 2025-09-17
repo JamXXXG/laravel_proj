@@ -20,7 +20,6 @@ class TryPolyDealsFactory extends Factory
     {
        $dealstatus = \App\Models\DealStatus::inRandomOrder()->first()->id;
        $s = $this->faker->randomElement([
-        User::class,
         Customers::class
        ]);
         return [

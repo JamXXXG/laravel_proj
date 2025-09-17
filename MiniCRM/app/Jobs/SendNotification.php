@@ -31,6 +31,7 @@ class SendNotification implements ShouldQueue
             if (!$this->deal->won_at) {
                 $this->deal->forceFill(['won_at' => now()])->save();
             }
+            // $notif = new DealWonNotification($this->deal);
             $this->deal->user->notify(new DealWonNotification($this->deal));
         }
     }

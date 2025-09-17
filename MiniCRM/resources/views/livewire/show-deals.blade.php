@@ -24,7 +24,7 @@
             </thead>
             <tbody>
                 @foreach ($deals as $deal)
-                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-800">
+                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-800 odd:bg-gray-900/50">
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->customer->name }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->status->name }}</td>
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->customer->email }}</td>
@@ -100,8 +100,7 @@
                         <flux:input label="Amount" name="amount" value="{{$editDeal->amount}}" wire:model.defer="editDealAttribs.amount" 
                          />
                         {{-- Status Dropdown --}}
-                        <flux:select label="Status" id="estatus_id" wire:model.defer="editDealAttribs.status_id" required 
-                        >
+                        <flux:select label="Status" id="estatus_id" wire:model.defer="editDealAttribs.status_id" required>
                             <option value="{{$editDeal->status_id}}">{{$editDeal->name}}</option>
                             <option value="">Select Status</option>
                             @foreach($stats as $stat)
@@ -118,7 +117,6 @@
                                 >Save changes</flux:button></flux:modal.close>
                             </div>
                         @endif
-                        
                     </form>
                 </div>
             </flux:modal>

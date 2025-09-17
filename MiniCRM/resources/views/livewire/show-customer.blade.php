@@ -23,7 +23,7 @@
             </thead>
             <tbody>
                 @foreach ($customers as $customer)
-                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-800">
+                    <tr class="hover:bg-blue-50 dark:hover:bg-blue-800 odd:bg-gray-900/50">
                     
                         @if (Str::startsWith($customer['avatar_path'], 'avatars/'))
                             <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-left text-sm font-semibold text-zinc-900 dark:text-zinc-100">
