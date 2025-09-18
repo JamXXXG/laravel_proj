@@ -35,19 +35,31 @@ class ShowCustomer extends Component
     public $query = '';
 
     public function boot(){
-        $this->editCustomer = Customers::get()->first();
+        $this->editCustomer = Customers::where('users_id', auth()->id())->get()->first();
     }
     public function render()
     {
          if($this->query == ''){
-            $customers = Customers::paginate(5);
+            $customers = Customers::where('users_id', auth()->id())->paginate(5);
         } else {
+            // $customers = Customers::query()
+            //     ->where('name', 'like', '%'.$this->query.'%')
+            //     ->orWhere('email', 'like', '%'.$this->query.'%')
+            //     ->orWhere('phone', 'like', '%'.$this->query.'%')
+            //     ->orWhere('notes', 'like', '%'.$this->query.'%')
+            //     ->paginate(5);
+
             $customers = Customers::query()
-                ->where('name', 'like', '%'.$this->query.'%')
+            ->where('users_id', auth()->id())
+            ->where(function($query) {
+                $query->where('name', 'like', '%'.$this->query.'%')
                 ->orWhere('email', 'like', '%'.$this->query.'%')
                 ->orWhere('phone', 'like', '%'.$this->query.'%')
-                ->orWhere('notes', 'like', '%'.$this->query.'%')
-                ->paginate(5);
+                ->orWhere('notes', 'like', '%'.$this->query.'%');
+            })
+            ->paginate(5);
+
+
 
             if($customers->isEmpty()){
                 session()->flash('message', 'No deals found for the search term: '.$this->query);

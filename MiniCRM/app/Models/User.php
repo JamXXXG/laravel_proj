@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -68,9 +69,9 @@ class User extends Authenticatable
         return $this->hasMany(Deal::class);
     }
 
-    public function trydeals(): MorphMany
+    public function trydeals(): MorphTo
     {
-        return $this->morphMany(TryPolyDeals::class, 'dealable')->withTrashed();
+        return $this->morphTo(TryPolyDeals::class, 'dealable')->withTrashed();
     }
     
 }

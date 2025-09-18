@@ -26,5 +26,15 @@
             <h2 class="text-lg font-semibold mb-2">Qualified Deals</h2>
             <p class="text-3xl">{{ $qualifiedDeals }}</p>
         </div>  
+        
+        <div class="bg-black p-4 rounded shadow">
+            <h2 class="text-lg font-semibold mb-2">Total Won Amount:</h2>
+            <p class="text-3xl">{{ $totalWonAmount }}</p>
+        </div>  
+        
+        <div class="bg-black p-4 rounded shadow">
+            <h2 class="text-lg font-semibold mb-2">Total Potential Amount:</h2>
+            <p class="text-3xl">{{ $totalUnwonAmount }}</p>
+        </div>  
     </div>
 </div>

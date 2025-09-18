@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('try_poly_deals', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('users_id')->constrained();
+            $table->foreignId('users_id')->constrained();
             // $table->foreignId('customers_id')->constrained();
             $table->foreignId('deal_status_id')->constrained();
             $table->morphs('dealable');

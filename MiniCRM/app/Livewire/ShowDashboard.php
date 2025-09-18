@@ -20,10 +20,15 @@ class ShowDashboard extends Component
     public $negotiatingDeals = null; 
 
     
+    public $totalWonAmount = null; 
+    public $totalUnwonAmount = null; 
+
+
+    
     public function boot(){
         
-        $this->deals = Deal::with('status', 'customer')->get();
-        $this->customers = Customers::all()->count();
+        $this->deals = Deal::with('status', 'customer')->where(['users_id' => auth()->id()])->get();
+        $this->customers = Customers::where(['users_id' => auth()->id()])->count();
         // $this->poly = TryPolyDeals::with('dealable', 'status', 'user')->get();
 
         //dis for poly try
@@ -36,19 +41,11 @@ class ShowDashboard extends Component
         $this->leadsDeals = $this->deals->where('status.name', 'Lead')->count();
         $this->qualifiedDeals = $this->deals->where('status.name', 'Qualified')->count();
         $this->negotiatingDeals = $this->deals->where('status.name', 'Negotiating')->count();
+
         
-        // $this->wonDeals = $this->deals::with('status')->whereHas('status', function($query){
-        //     $query->where('name', 'Won');
-        // })->count();
-        // $this->leadsDeals = $this->deals::with('status')->whereHas('status', function($query){
-        //     $query->where('name', 'Lead');
-        // })->count();
-        // $this->qualifiedDeals = $this->deals::with('status')->whereHas('status', function($query){
-        //     $query->where('name', 'Qualified');
-        // })->count();
-        // $this->negotiatingDeals = $this->deals::with('status')->whereHas('status', function($query){
-        //     $query->where('name', 'Negotiating');
-        // })->count();
+        $this->totalWonAmount = $this->deals->sum('amount');
+        $this->totalUnwonAmount = $this->deals->where('status.name','!=', 'Won')->sum('amount');
+        
 
     }
 

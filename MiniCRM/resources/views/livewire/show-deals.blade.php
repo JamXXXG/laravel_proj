@@ -23,6 +23,7 @@
                 </tr>
             </thead>
             <tbody>
+            @if(!($deals == null))
                 @foreach ($deals as $deal)
                     <tr class="hover:bg-blue-50 dark:hover:bg-blue-800 odd:bg-gray-900/50">
                         <td class="border-b border-zinc-200 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-900 dark:text-zinc-100">{{ $deal->customer->name }}</td>
@@ -43,9 +44,15 @@
                         </td>
                     </tr>
                 @endforeach
+            @endif
             </tbody>
         </table>
         {{$deals->links()}}
+        @if (session()->has('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
     </div>
         <flux:separator />
          <div class="mt-8 px-4 py-4">

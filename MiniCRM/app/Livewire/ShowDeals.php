@@ -5,8 +5,10 @@ namespace App\Livewire;
 use App\Models\Customers;
 use App\Models\Deal;
 use App\Models\DealStatus;
+use App\Models\TryPolyDeals;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -47,7 +49,7 @@ class ShowDeals extends Component
     
     public function boot(){
         $this->editDeal = Deal::with(['status', 'customer'])->get()->first();
-        $this->customers = Customers::get();
+        $this->customers = Customers::where(['users_id' => auth()->id()])->get();
         $this->stats = DealStatus::get();
         $this->user = User::get();
     }
@@ -55,19 +57,46 @@ class ShowDeals extends Component
     public function render()
     {
         if($this->query == ''){
-            $deals = Deal::paginate(5);
+            $deals = Deal::with(['status', 'customer'])->where(['users_id' => auth()->id()])->paginate(5);
             // dd(Deal::get()[0]->customer);
         } else {
-            $deals = Deal::query()
-                ->where('title', 'like', '%'.$this->query.'%')
-                ->orWhereHas('status', function($q){
-                    $q->where('name', 'like', '%'.$this->query.'%');
-                })
-                ->orWhereHas('customer', function($q){
-                    $q->where('name', 'like', '%'.$this->query.'%');
-                })
-                ->orWhere('amount', 'like', '%'.$this->query.'%')
-                ->paginate(5);
+
+            // polymorphed deals
+            //     $deals = TryPolyDeals::where('users_id', 'like', '%'.auth()->id().'%')->whereHasMorph(
+            //     'dealable', [Customers::class],
+            //     function (Builder $query){
+            //         $query->orWhere('amount', 'like', '%'.$this->query.'%')
+            //             ->orWhere('title', 'like', '%'.$this->query.'%');
+            //     }
+            // )->paginate(5);
+
+
+            //all search
+            // $deals = Deal::query()
+            //     ->where('title', 'like', '%'.$this->query.'%')
+            //     ->orWhereHas('status', function($q){
+            //         $q->where('name', 'like', '%'.$this->query.'%');
+            //     })
+            //     ->orWhereHas('customer', function($q){
+            //         $q->where('name', 'like', '%'.$this->query.'%');
+            //     })
+            //     ->orWhere('amount', 'like', '%'.$this->query.'%')
+            //     ->orWhere('users_id', 'like', '%'.auth()->id().'%')
+            //     ->paginate(5);
+
+            $deals = Deal::with(['status', 'customer'])
+            ->where('users_id', auth()->id())
+            ->where(function($query) {
+                $query->where('title', 'like', '%'.$this->query.'%')
+                    ->orWhereHas('status', function($q){
+                        $q->where('name', 'like', '%'.$this->query.'%');
+                    })
+                    ->orWhereHas('customer', function($q){
+                        $q->where('name', 'like', '%'.$this->query.'%');
+                    })
+                    ->orWhere('amount', 'like', '%'.$this->query.'%');
+            })
+            ->paginate(5);
 
             if($deals->isEmpty()){
                 session()->flash('message', 'No deals found for the search term: '.$this->query);
@@ -84,6 +113,10 @@ class ShowDeals extends Component
     public function edit($id)
     {
         $editDeal = Deal::with(['customer'])->findOrFail($id);
+
+        // dd(Customers::get()->first()->trydeals);
+        // dd(TryPolyDeals::get()->last()->dealable);
+        
         $this->editDeal = $editDeal;
         $this->editDealAttribs = [
             'id' => $editDeal->id,
@@ -106,6 +139,7 @@ class ShowDeals extends Component
         // dd($this->editDeal);
         
         $editDeal = Deal::with(['customer'])->findOrFail($this->editDealAttribs['id']);
+        $editDeal2 = TryPolyDeals::with(['dealable'])->findOrFail($editDeal->id);
 
         if($this->editDealAttribs['status_id'] == 4 && $this->editDealAttribs['won_at'] == null){ // if status is "Won" and won_at is null
             $this->editDealAttribs['won_at'] = Carbon::now();
@@ -129,18 +163,16 @@ class ShowDeals extends Component
                 'expected_close_at' => $this->editDealAttribs['expected_close_at'],
                 'won_at' => $this->editDealAttribs['won_at'],
             ]);
+
+            $editDeal2 ->update([
+                'title' => $this->editDealAttribs['title']
+            ]);
             DB::commit();
 
         } catch (\Exception $e){
             DB::rollBack();
             dd($e->getMessage());
         }
-
-
-
-
-
-
         return redirect(request()->header('Referer'));
     }
     
@@ -180,6 +212,17 @@ class ShowDeals extends Component
                 'title' => $this->newDeal['title'],
                 'amount' => $this->newDeal['amount'],
                 'customers_id' => $this->newDeal['customer_id'],
+                'deal_status_id' => $this->newDeal['status_id'],
+                'expected_close_at' => $this->newDeal['expected_close_at'],
+                'won_at' => $this->newDeal['won_at'],
+            ]);
+
+            TryPolyDeals::create([
+                'users_id' => auth()->id(),
+                'title' => $this->newDeal['title'],
+                'amount' => $this->newDeal['amount'],
+                'dealable_id' => $this->newDeal['customer_id'],
+                'dealable_type' => Customers::class,
                 'deal_status_id' => $this->newDeal['status_id'],
                 'expected_close_at' => $this->newDeal['expected_close_at'],
                 'won_at' => $this->newDeal['won_at'],

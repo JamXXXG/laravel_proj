@@ -14,6 +14,7 @@ class TryPolyDeals extends Model
     use HasFactory;
 
     protected $fillable = [
+        'users_id',
         'dealable_id',
         'dealable_type',
         'deal_status_id',

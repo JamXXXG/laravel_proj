@@ -23,6 +23,7 @@ class TryPolyDealsFactory extends Factory
         Customers::class
        ]);
         return [
+            'users_id' => \App\Models\User::inRandomOrder()->first()->id,
             'dealable_id' => $s::factory(),
             'dealable_type' => $s,
             'title' => fake()->words(3, true),

@@ -2,13 +2,21 @@
 
 namespace App\Livewire;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\WithPagination; 
 
 class ShowNotifications extends Component
 {
+    use withPagination;
+    public function boot(){
+    }
     public function render()
     {
-        return view('livewire.show-notifications');
+        // dd($this->notifications);
+        
+        $notifications = auth()->user()->unreadNotifications()->latest()->paginate(5);
+        return view('livewire.show-notifications', ['notifications' => $notifications]);
     }
 
     
